@@ -6,6 +6,94 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  username  String
+  email     String    @unique
+  password  String
+  firstName String    @map("first_name")
+  lastName  String    @map("last_name")
+  address   String    @db.Text
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  RoleId    Role?     @relation(fields: [roleId], references: [id])
+  roleId    Int?
+  product   Product[]
+
+  @@map("users")
+}
+
+model Role {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user       User[]
+  permission PermissionRole[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  permission PermissionRole[]
+
+  @@map("permissions")
+}
+
+model PermissionRole {
+  Role         Role        @relation(fields: [roleId], references: [id])
+  roleId       Int
+  Permission   Permission? @relation(fields: [permissionId], references: [id])
+  permissionId Int
+
+  @@id([roleId, permissionId])
+  @@map("permission_role")
+}
+
+model Product {
+  id            Int             @id @default(autoincrement())
+  name          String
+  price         Int
+  description   String          @db.Text
+  quantity      Int
+  deleted       Boolean         @default(false)
+  productPicUrl String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  User          User?           @relation(fields: [userId], references: [id])
+  userId        Int?
+  productImage  ProductImages[]
+  Category      Category?       @relation(fields: [categoryId], references: [id])
+  categoryId    Int?
+
+  @@map("products")
+}
+
+model ProductImages {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId Int?
+
+  @@map("product_images")
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  product   Product[]
 }
