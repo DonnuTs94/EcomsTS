@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { UserRegister } from "../interface/userInterface"
 import { createUser, findRole } from "../services/userService"
+import { getRoleId } from "../helper/role"
 
 const adminController = {
   createAdmin: async (req: Request, res: Response) => {
@@ -14,13 +15,9 @@ const adminController = {
         lastName,
       }: UserRegister = req.body
 
-      const userRole = await findRole()
+      const foundRoleAdmin = await getRoleId("user")
 
-      const foundRoleUserId = userRole.find(
-        (admin) => admin.name === "administrator"
-      )
-
-      const RoleId = Number(foundRoleUserId?.id)
+      const RoleId = Number(foundRoleAdmin?.id)
 
       await createUser(
         username,
