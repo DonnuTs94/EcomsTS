@@ -26,6 +26,7 @@ const authController = {
 
       const token = generateToken({
         id: userData.id,
+        roleId: userData.roleId,
       })
 
       return res.status(200).json({

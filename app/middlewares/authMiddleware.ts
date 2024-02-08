@@ -2,6 +2,9 @@ import { Request, Response, NextFunction } from "express"
 import { User, UserRegister } from "../interface/userInterface"
 import { EMAIL_VALIDATOR, PASSWORD_VALIDATOR } from "../constant/regexValidator"
 import { validToken } from "../lib/jwt"
+import { PrismaClient } from "@prisma/client"
+
+const prisma = new PrismaClient()
 
 const validateRegister = (req: Request, res: Response, next: NextFunction) => {
   const error: Partial<UserRegister> = {}
@@ -70,4 +73,35 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
-export { validateRegister }
+const authorizePermission = (permission: string) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return res.status(400).json({
+        message: "Unauthorized",
+      })
+    }
+
+    const permissionRecord = await prisma.permissionRole.findMany({
+      where: {
+        roleId: Number(req.user.roleId),
+      },
+      include: {
+        Permission: true,
+      },
+    })
+
+    const permissions = permissionRecord.map(
+      (record) => record.Permission?.name
+    )
+
+    if (!permissions.includes(permission)) {
+      return res.status(403).json({
+        message: "Forbidden",
+      })
+    }
+
+    next()
+  }
+}
+
+export { validateRegister, verifyToken, authorizePermission }
