@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { UserRegister } from "../interface/userInterface"
-import { createUser, findRole } from "../services/userService"
+import { createUser, findEmail, findRole } from "../services/userService"
 import { getRoleId } from "../helper/role"
 
 const userController = {
@@ -16,6 +16,14 @@ const userController = {
       }: UserRegister = req.body
 
       const foundRoleUser = await getRoleId("user")
+
+      const emailExist = await findEmail(email)
+
+      if (emailExist) {
+        return res.status(401).json({
+          message: "Email has already exist!",
+        })
+      }
 
       const RoleId = Number(foundRoleUser?.id)
 
