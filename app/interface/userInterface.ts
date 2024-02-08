@@ -6,3 +6,10 @@ export interface UserRegister {
   lastName: string
   address: string
 }
+
+export interface User {
+  id: number
+  username: string
+  email: string
+  roleId: number | null
+}

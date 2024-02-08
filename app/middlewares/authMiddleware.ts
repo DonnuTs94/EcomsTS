@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express"
-import { UserRegister } from "../interface/userInterface"
+import { User, UserRegister } from "../interface/userInterface"
 import { EMAIL_VALIDATOR, PASSWORD_VALIDATOR } from "../constant/regexValidator"
+import { validToken } from "../lib/jwt"
 
 const validateRegister = (req: Request, res: Response, next: NextFunction) => {
   const error: Partial<UserRegister> = {}
@@ -37,6 +38,36 @@ const validateRegister = (req: Request, res: Response, next: NextFunction) => {
   }
 
   next()
+}
+
+const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+  let token = req.headers.authorization
+
+  if (!token) {
+    return res.status(401).json({
+      message: "User Unauthorized",
+    })
+  }
+
+  try {
+    token = token.split(" ")[1]
+
+    const verifiedUser = validToken(token)
+
+    if (!verifiedUser) {
+      return res.status(401).json({
+        message: "Unauthorized request",
+      })
+    }
+
+    req.user = verifiedUser as User
+
+    next()
+  } catch (err: any) {
+    return res.status(401).json({
+      message: "Invalid Token",
+    })
+  }
 }
 
 export { validateRegister }

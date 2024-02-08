@@ -33,4 +33,12 @@ const findRole = async () => {
   return findRole
 }
 
-export { createUser, findRole }
+const findEmail = async (email: string) => {
+  return await prisma.user.findFirst({
+    where: {
+      email,
+    },
+  })
+}
+
+export { createUser, findRole, findEmail }
