@@ -34,7 +34,7 @@ const upload = (options: UploadOptions) => {
     storage: diskStorage,
     fileFilter,
     limits: { fileSize: options.maxSize },
-  })
+  }).any()
 }
 
 export { upload }
