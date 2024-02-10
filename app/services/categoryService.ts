@@ -14,4 +14,12 @@ const createCategory = async (name: string) => {
   }
 }
 
-export { createCategory }
+const getCategoryById = async (categoryId: string) => {
+  return await prisma.category.findFirst({
+    where: {
+      id: Number(categoryId),
+    },
+  })
+}
+
+export { createCategory, getCategoryById }

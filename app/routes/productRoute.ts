@@ -20,4 +20,7 @@ router.post(
   productController.createProduct
 )
 
+router.get("/", productController.getAllProduct)
+router.get("/:id", productController.getProductById)
+
 export default router
