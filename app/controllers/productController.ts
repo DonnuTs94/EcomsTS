@@ -2,7 +2,6 @@ import { Request, Response } from "express"
 import { PrismaClient } from "@prisma/client"
 import fs from "fs"
 import { getCategoryById } from "../services/categoryService"
-import { createMultipleImages } from "../services/productImageService"
 import {
   getAllProduct,
   getDataProductById,
@@ -11,7 +10,10 @@ import {
   hardDelete,
   softDelete,
 } from "../services/productService"
-import { getAllProductImages } from "../services/productImagesService"
+import {
+  createMultipleImages,
+  getAllProductImages,
+} from "../services/productImagesService"
 
 const prisma = new PrismaClient()
 
@@ -157,7 +159,6 @@ const productController = {
         message: "Successfully delete product!",
       })
     } catch (err: any) {
-      console.log(err)
       return res.status(500).json({
         message: "Server error",
       })

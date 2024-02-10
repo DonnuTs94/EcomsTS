@@ -1,4 +1,4 @@
-import multer, { DiskStorageOptions, Multer, StorageEngine } from "multer"
+import multer from "multer"
 import { Request } from "express"
 import { UploadOptions } from "../interface/uploaderInterface"
 
@@ -8,21 +8,22 @@ const upload = (options: UploadOptions) => {
       const dynamicPath = options.dynamicDestination
       cb(null, dynamicPath)
     },
-    filename: (req: Request, file: Express.Multer.File, cb) => {
+    filename: (req, file, cb) => {
       const { originalname } = file
-      options.fileName = originalname + Date.now()
+      const fileName = originalname + Date.now() // Ensure each filename is unique
       cb(
         null,
-        `${options.filePrefix}-${options.fileName}.${
-          file.mimetype.split("/")[1]
-        }`
+        `${options.filePrefix}-${fileName}.${file.mimetype.split("/")[1]}`
       )
     },
   })
 
-  const fileFilter = (req: Request, file: Express.Multer.File, cb: any) => {
+  const fileFilter = (
+    req: Request,
+    file: Express.Multer.File,
+    cb: multer.FileFilterCallback
+  ) => {
     const extension = file.mimetype.split("/")[1]
-
     if (options.acceptedFileTypes?.includes(extension)) {
       cb(null, true)
     } else {
@@ -30,11 +31,12 @@ const upload = (options: UploadOptions) => {
     }
   }
 
+  // Use .array() if you want to accept multiple files, or .single() for a single file
   return multer({
     storage: diskStorage,
     fileFilter,
     limits: { fileSize: options.maxSize },
-  }).any()
+  }).any() // Change .any() to .array() or .single() as needed
 }
 
 export { upload }
