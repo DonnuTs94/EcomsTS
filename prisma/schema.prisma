@@ -75,6 +75,7 @@ model Product {
   productImage  ProductImages[]
   Category      Category?       @relation(fields: [categoryId], references: [id])
   categoryId    Int?
+  Cart          Cart[]
 
   @@map("products")
 }
@@ -96,4 +97,19 @@ model Category {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   product   Product[]
+
+  @@map("categories")
+}
+
+model Cart {
+  id        Int      @id @default(autoincrement())
+  productId Int?
+  quantity  Int      @default(1)
+  total     Float    @default(0) @db.Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Product Product? @relation(fields: [productId], references: [id])
+
+  @@map("cart")
 }

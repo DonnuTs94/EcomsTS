@@ -30,6 +30,20 @@ const getAllProduct = async (pagesize: number, offset: number) => {
     where: {
       deleted: false,
     },
+    include: {
+      Category: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      productImage: {
+        select: {
+          id: true,
+          imageUrl: true,
+        },
+      },
+    },
   })
 }
 
