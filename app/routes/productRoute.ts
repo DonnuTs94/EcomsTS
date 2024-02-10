@@ -3,6 +3,7 @@ import { authorizePermission, verifyToken } from "../middlewares/authMiddleware"
 import { Permission } from "../enum/authorization"
 import { upload } from "../lib/uploader"
 import productController from "../controllers/productController"
+import { verifyAdminOwnership } from "../middlewares/propertyMiddleware"
 
 const router = Router()
 
@@ -22,5 +23,21 @@ router.post(
 
 router.get("/", productController.getAllProduct)
 router.get("/:id", productController.getProductById)
+
+router.delete(
+  "/hard-delete/:id",
+  verifyToken,
+  authorizePermission(Permission.DELETE_PRODUCT),
+  verifyAdminOwnership,
+  productController.hardDelete
+)
+
+router.delete(
+  "/:id",
+  verifyToken,
+  authorizePermission(Permission.DELETE_PRODUCT),
+  verifyAdminOwnership,
+  productController.softDelete
+)
 
 export default router

@@ -84,7 +84,7 @@ model ProductImages {
   imageUrl  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Product   Product? @relation(fields: [productId], references: [id])
+  Product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int?
 
   @@map("product_images")

@@ -1,9 +1,8 @@
 import { PrismaClient } from "@prisma/client"
-import { ProductPagination } from "../interface/productInterface"
 
 const prisma = new PrismaClient()
 
-const getProductById = async (productId: number) => {
+const getDataProductById = async (productId: number) => {
   return await prisma.product.findFirst({
     where: {
       id: productId,
@@ -12,6 +11,14 @@ const getProductById = async (productId: number) => {
     include: {
       Category: true,
       productImage: true,
+    },
+  })
+}
+
+const getProductId = async (productId: number) => {
+  return await prisma.product.findFirst({
+    where: {
+      id: productId,
     },
   })
 }
@@ -30,4 +37,29 @@ const getTotalProduct = async () => {
   return prisma.product.findMany()
 }
 
-export { getProductById, getAllProduct, getTotalProduct }
+const hardDelete = async (productId: number) => {
+  return await prisma.product.delete({
+    where: {
+      id: productId,
+    },
+  })
+}
+
+const softDelete = async (productId: number) => {
+  return await prisma.product.update({
+    where: {
+      id: productId,
+    },
+    data: {
+      deleted: true,
+    },
+  })
+}
+export {
+  getDataProductById,
+  getAllProduct,
+  getTotalProduct,
+  hardDelete,
+  softDelete,
+  getProductId,
+}

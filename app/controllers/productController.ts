@@ -1,12 +1,17 @@
 import { Request, Response } from "express"
 import { PrismaClient } from "@prisma/client"
+import fs from "fs"
 import { getCategoryById } from "../services/categoryService"
 import { createMultipleImages } from "../services/productImageService"
 import {
   getAllProduct,
-  getProductById,
+  getDataProductById,
   getTotalProduct,
+  getProductId,
+  hardDelete,
+  softDelete,
 } from "../services/productService"
+import { getAllProductImages } from "../services/productImagesService"
 
 const prisma = new PrismaClient()
 
@@ -79,7 +84,7 @@ const productController = {
     try {
       const productId = Number(req.params.id)
 
-      const productData = await getProductById(productId)
+      const productData = await getDataProductById(productId)
 
       if (!productData) {
         return res.status(400).json({
@@ -122,6 +127,58 @@ const productController = {
         data: productData,
         currentPage: page,
         totalPages: totalPages,
+      })
+    } catch (err: any) {
+      return res.status(500).json({
+        message: "Server error",
+      })
+    }
+  },
+  hardDelete: async (req: Request, res: Response) => {
+    try {
+      const propertyId = Number(req.params.id)
+
+      const foundProductId = await getProductId(propertyId)
+
+      if (!foundProductId) {
+        return res.status(400).json({
+          message: "Product does'nt exist!",
+        })
+      }
+      const productImages = await getAllProductImages(foundProductId.id)
+
+      await hardDelete(foundProductId.id)
+
+      productImages.map((image) => {
+        fs.unlinkSync("public/" + image.imageUrl)
+      })
+
+      return res.status(200).json({
+        message: "Successfully delete product!",
+      })
+    } catch (err: any) {
+      console.log(err)
+      return res.status(500).json({
+        message: "Server error",
+      })
+    }
+  },
+  softDelete: async (req: Request, res: Response) => {
+    try {
+      const propertyId = Number(req.params.id)
+
+      const foundProductId = await getProductId(propertyId)
+
+      if (!foundProductId) {
+        return res.status(400).json({
+          message: "Product does'nt exist!",
+        })
+      }
+
+      await softDelete(foundProductId.id)
+
+      return res.status(200).json({
+        message: "Successfully delete product!",
       })
     } catch (err: any) {
       return res.status(500).json({
