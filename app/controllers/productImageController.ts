@@ -1,7 +1,9 @@
 import { Request, Response } from "express"
+import fs from "fs"
 import {
   createMultipleImages,
   deleteProductImage,
+  getAllProductImages,
 } from "../services/productImagesService"
 
 const productImageController = {
@@ -35,7 +37,23 @@ const productImageController = {
   deleteImage: async (req: Request, res: Response) => {
     try {
       const { productImageId } = req.body
-      await deleteProductImage(productImageId)
+      const productId = Number(req.params.id)
+
+      const productImage = (await getAllProductImages(productId)).map(
+        (image) => {
+          return image.id
+        }
+      )
+
+      if (productImage !== productImageId) {
+        return res.status(400).json({
+          message: "Image does'nt exist!",
+        })
+      }
+
+      const imageData = await deleteProductImage(productImageId)
+
+      fs.unlinkSync("public/" + imageData.imageUrl)
 
       return res.status(200).json({
         message: "Successfully delete product image",

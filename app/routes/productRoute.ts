@@ -25,6 +25,14 @@ router.post(
 router.get("/", productController.getAllProduct)
 router.get("/:id", productController.getProductById)
 
+router.put(
+  "/:id",
+  verifyToken,
+  authorizePermission(Permission.EDIT_PRODUCT),
+  verifyAdminOwnership,
+  productController.updatePrice
+)
+
 router.delete(
   "/hard-delete/:id",
   verifyToken,

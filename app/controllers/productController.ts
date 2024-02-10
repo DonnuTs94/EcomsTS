@@ -9,6 +9,7 @@ import {
   getProductId,
   hardDelete,
   softDelete,
+  updatePrice,
 } from "../services/productService"
 import {
   createMultipleImages,
@@ -22,6 +23,12 @@ const productController = {
     try {
       const { name, price, description, quantity } = req.body
       const categoryId = req.body.categoryId
+
+      if (!name || !price || !description || !quantity || !categoryId) {
+        return res.status(400).json({
+          message: "Input must be filled",
+        })
+      }
 
       const files = req.files as Express.Multer.File[]
       let imagesPath: string[] = []
@@ -180,6 +187,34 @@ const productController = {
 
       return res.status(200).json({
         message: "Successfully delete product!",
+      })
+    } catch (err: any) {
+      return res.status(500).json({
+        message: "Server error",
+      })
+    }
+  },
+  updatePrice: async (req: Request, res: Response) => {
+    try {
+      const { price } = req.body
+      const productId = Number(req.params.id)
+
+      if (price === 0) {
+        return res.status(400).json({
+          message: "price must higher than 0",
+        })
+      }
+
+      if (!price) {
+        return res.status(400).json({
+          message: "input must be filled!",
+        })
+      }
+
+      await updatePrice(productId, price)
+
+      return res.status(200).json({
+        message: "Successfully update price",
       })
     } catch (err: any) {
       return res.status(500).json({

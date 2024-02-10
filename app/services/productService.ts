@@ -55,6 +55,17 @@ const softDelete = async (productId: number) => {
     },
   })
 }
+
+const updatePrice = async (productId: number, price: number) => {
+  return await prisma.product.update({
+    where: {
+      id: productId,
+    },
+    data: {
+      price: price,
+    },
+  })
+}
 export {
   getDataProductById,
   getAllProduct,
@@ -62,4 +73,5 @@ export {
   hardDelete,
   softDelete,
   getProductId,
+  updatePrice,
 }
