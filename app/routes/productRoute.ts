@@ -3,7 +3,7 @@ import { authorizePermission, verifyToken } from "../middlewares/authMiddleware"
 import { Permission } from "../enum/authorization"
 import { upload } from "../lib/uploader"
 import productController from "../controllers/productController"
-import { verifyAdminOwnership } from "../middlewares/propertyMiddleware"
+import { verifyAdminOwnership } from "../middlewares/productMiddleware"
 import productImageController from "../controllers/productImageController"
 
 const router = Router()

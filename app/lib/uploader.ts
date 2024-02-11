@@ -10,10 +10,16 @@ const upload = (options: UploadOptions) => {
     },
     filename: (req, file, cb) => {
       const { originalname } = file
-      const fileName = originalname + Date.now() // Ensure each filename is unique
+      const timestamp = Date.now()
+      const fileNameWithoutExtension = originalname.substring(
+        0,
+        originalname.lastIndexOf(".")
+      )
       cb(
         null,
-        `${options.filePrefix}-${fileName}.${file.mimetype.split("/")[1]}`
+        `${options.filePrefix}-${fileNameWithoutExtension}-${timestamp}.${
+          file.mimetype.split("/")[1]
+        }`
       )
     },
   })
@@ -31,12 +37,11 @@ const upload = (options: UploadOptions) => {
     }
   }
 
-  // Use .array() if you want to accept multiple files, or .single() for a single file
   return multer({
     storage: diskStorage,
     fileFilter,
     limits: { fileSize: options.maxSize },
-  }).any() // Change .any() to .array() or .single() as needed
+  }).any()
 }
 
 export { upload }

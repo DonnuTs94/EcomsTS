@@ -145,9 +145,9 @@ const productController = {
   },
   hardDelete: async (req: Request, res: Response) => {
     try {
-      const propertyId = Number(req.params.id)
+      const productId = Number(req.params.id)
 
-      const foundProductId = await getProductId(propertyId)
+      const foundProductId = await getProductId(productId)
 
       if (!foundProductId) {
         return res.status(400).json({
@@ -173,9 +173,9 @@ const productController = {
   },
   softDelete: async (req: Request, res: Response) => {
     try {
-      const propertyId = Number(req.params.id)
+      const productId = Number(req.params.id)
 
-      const foundProductId = await getProductId(propertyId)
+      const foundProductId = await getProductId(productId)
 
       if (!foundProductId) {
         return res.status(400).json({
