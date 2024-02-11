@@ -15,6 +15,15 @@ export const Permission = {
   EDIT_CATEGORY: "edit_category",
   ADD_CATEGORY: "add_category",
   DELETE_CATEGORY: "delete_category",
+
+  BROWSE_CARTS: "browse_carts",
+  EDIT_CART: "edit_cart",
+  ADD_CART: "add_cart",
+  DELETE_CART: "delete_cart",
+
+  BROWSE_ORDERS: "browse_orders",
+  READ_ORDER: "read_order",
+  ADD_ORDER: "add_order",
 }
 
 // Permission.BROWSE_PRODUCTS
@@ -39,5 +48,14 @@ export const PermissionAssignment = {
 
     Permission.BROWSE_CATEGORIES,
     Permission.READ_CATEGORY,
+
+    Permission.BROWSE_CARTS,
+    Permission.EDIT_CART,
+    Permission.ADD_CART,
+    Permission.DELETE_CART,
+
+    Permission.BROWSE_ORDERS,
+    Permission.READ_ORDER,
+    Permission.ADD_ORDER,
   ],
 }

@@ -15,6 +15,15 @@ enum Permission {
   EDIT_CATEGORY = "edit_category",
   ADD_CATEGORY = "add_category",
   DELETE_CATEGORY = "delete_category",
+
+  BROWSE_CARTS = "browse_carts",
+  EDIT_CART = "edit_cart",
+  ADD_CART = "add_cart",
+  DELETE_CART = "delete_cart",
+
+  BROWSE_ORDERS = "browse_orders",
+  READ_ORDER = "read_order",
+  ADD_ORDER = "add_order",
 }
 
 enum PermissionAssignment {

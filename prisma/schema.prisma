@@ -11,18 +11,20 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   username  String
-  email     String    @unique
+  email     String   @unique
   password  String
-  firstName String    @map("first_name")
-  lastName  String    @map("last_name")
-  address   String    @db.Text
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  RoleId    Role?     @relation(fields: [roleId], references: [id])
-  roleId    Int?
-  product   Product[]
+  firstName String   @map("first_name")
+  lastName  String   @map("last_name")
+  address   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  RoleId  Role?     @relation(fields: [roleId], references: [id])
+  roleId  Int?
+  Product Product[]
+  Cart    Cart[]
 
   @@map("users")
 }
@@ -33,8 +35,8 @@ model Role {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user       User[]
-  permission PermissionRole[]
+  User       User[]
+  Permission PermissionRole[]
 
   @@map("roles")
 }
@@ -45,7 +47,7 @@ model Permission {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  permission PermissionRole[]
+  Permission PermissionRole[]
 
   @@map("permissions")
 }
@@ -61,21 +63,21 @@ model PermissionRole {
 }
 
 model Product {
-  id            Int             @id @default(autoincrement())
-  name          String
-  price         Int
-  description   String          @db.Text
-  quantity      Int
-  deleted       Boolean         @default(false)
-  productPicUrl String?
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  User          User?           @relation(fields: [userId], references: [id])
-  userId        Int?
-  productImage  ProductImages[]
-  Category      Category?       @relation(fields: [categoryId], references: [id])
-  categoryId    Int?
-  Cart          Cart[]
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Int
+  description String   @db.Text
+  quantity    Int
+  deleted     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  User         User?           @relation(fields: [userId], references: [id])
+  userId       Int?
+  ProductImage ProductImages[]
+  Category     Category?       @relation(fields: [categoryId], references: [id])
+  categoryId   Int?
+  Cart         Cart[]
 
   @@map("products")
 }
@@ -85,6 +87,7 @@ model ProductImages {
   imageUrl  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
   Product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int?
 
@@ -92,11 +95,12 @@ model ProductImages {
 }
 
 model Category {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  product   Product[]
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Product Product[]
 
   @@map("categories")
 }
@@ -110,6 +114,8 @@ model Cart {
   updatedAt DateTime @updatedAt
 
   Product Product? @relation(fields: [productId], references: [id])
+  User    User?    @relation(fields: [userId], references: [id])
+  userId  Int?
 
   @@map("cart")
 }

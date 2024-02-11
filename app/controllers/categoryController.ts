@@ -20,6 +20,7 @@ const categoryController = {
           message: "Category name already exist!",
         })
       }
+      console.log(err)
       return res.status(500).json({
         message: "Server error",
       })

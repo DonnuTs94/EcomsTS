@@ -69,7 +69,7 @@ const productController = {
           id: createProductData.id,
         },
         include: {
-          productImage: true,
+          ProductImage: true,
           User: {
             select: {
               id: true,

@@ -10,7 +10,7 @@ const getDataProductById = async (productId: number) => {
     },
     include: {
       Category: true,
-      productImage: true,
+      ProductImage: true,
     },
   })
 }
@@ -37,7 +37,7 @@ const getAllProduct = async (pagesize: number, offset: number) => {
           name: true,
         },
       },
-      productImage: {
+      ProductImage: {
         select: {
           id: true,
           imageUrl: true,
