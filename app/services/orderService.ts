@@ -6,7 +6,8 @@ const createOrder = async (
   total: number,
   date: Date,
   orderId: number,
-  status: StatusOrder
+  status: StatusOrder,
+  userId: number
 ) => {
   const paddedOrderId = orderId.toString().padStart(5, "0")
   const invoice = `invoice-${paddedOrderId}`
@@ -17,6 +18,7 @@ const createOrder = async (
       date,
       invoice,
       status,
+      userId,
     },
   })
 }

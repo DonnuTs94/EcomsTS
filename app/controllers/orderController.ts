@@ -12,6 +12,12 @@ const orderController = {
 
       const cartData = await foundCartIds(cartIds)
 
+      if (cartIds.length !== cartData.length) {
+        return res.status(400).json({
+          message: "Cart does'nt exist!",
+        })
+      }
+
       const dataPayment = {
         amount,
         cardNumber,
@@ -19,8 +25,20 @@ const orderController = {
         expiryMonth,
         expiryYear,
       }
-      console.log(dataPayment)
-      // console.log(cartData)
+
+      const fetchResponse = await fetch("http://localhost:3000/pay", {
+        method: "POST",
+        body: JSON.stringify(dataPayment),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((response) => response.json())
+
+      if (fetchResponse.message === "Payment failed") {
+        return res.status(400).json({
+          message: "Payment failed!",
+        })
+      }
 
       let sum = 0
 
@@ -54,6 +72,14 @@ const orderController = {
 
       const productIds = await getProductIds(foundProductIdInCart as number[])
 
+      productIds.map((data) => {
+        if (!data) {
+          return res.status(400).json({
+            message: "Product does'nt exist",
+          })
+        }
+      })
+
       const foundQtyProduct = productIds.map((item) => {
         return item.quantity
       })
@@ -69,52 +95,40 @@ const orderController = {
         })
       }
 
-      await fetch("http://localhost:3000/pay", {
-        method: "POST",
-        body: JSON.stringify(dataPayment),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const createOrderData = await createOrder(
+        sum,
+        currentDate,
+        createInvoiceNumber,
+        "paid",
+        Number(req.user?.id)
+      )
+
+      const orderItemData = cartData.map((item) => {
+        return {
+          quantity: item.quantity,
+          price: item.Product?.price || 0,
+          total: item.total,
+          orderId: Number(createOrderData.id),
+          productId: Number(item.productId),
+        }
       })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data)
-        })
-      // console.log(response.)
-
-      // const createOrderData = await createOrder(
-      //   sum,
-      //   currentDate,
-      //   createInvoiceNumber,
-      //   "waitingForPayment"
-      // )
-
-      // const orderItemData = cartData.map((item) => {
-      //   return {
-      //     quantity: item.quantity,
-      //     price: item.Product?.price || 0,
-      //     total: item.total,
-      //     orderId: Number(createOrderData.id),
-      //     productId: Number(item.productId),
-      //   }
-      // })
 
       const newProductQty = foundQtyProduct.map((item, i) => {
         return item - foundQtyProductInCart[i]
       })
 
-      // await createOrderItem(orderItemData)
+      await createOrderItem(orderItemData)
 
-      // await updateManyQuantity(foundProductIdInCart as [], newProductQty)
+      await updateManyQuantity(foundProductIdInCart as [], newProductQty)
 
-      // await deleteManyCart(cartIds)
+      await deleteManyCart(cartIds)
 
       return res.status(200).json({
         message: "Success add new order",
-        // data: cartData,
-        sum,
+        data: createOrderData,
       })
     } catch (err: any) {
+      console.log(err)
       return res.status(500).json({
         message: "Server error",
       })
