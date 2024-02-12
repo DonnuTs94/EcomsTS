@@ -23,8 +23,52 @@ const createOrder = async (
   })
 }
 
-const foundAllOrder = async () => {
+const findAllOrder = async () => {
   return await prisma.order.findMany()
 }
 
-export { createOrder, foundAllOrder }
+const findAllOrdersUser = async (userId: number) => {
+  return await prisma.order.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      OrderItem: {
+        select: {
+          quantity: true,
+          total: true,
+          Product: {
+            select: {
+              name: true,
+              price: true,
+            },
+          },
+        },
+      },
+    },
+  })
+}
+
+const findOrderUserById = async (oderId: number) => {
+  return await prisma.order.findFirst({
+    where: {
+      id: oderId,
+    },
+    include: {
+      OrderItem: {
+        select: {
+          quantity: true,
+          total: true,
+          Product: {
+            select: {
+              name: true,
+              price: true,
+            },
+          },
+        },
+      },
+    },
+  })
+}
+
+export { createOrder, findAllOrder, findAllOrdersUser, findOrderUserById }

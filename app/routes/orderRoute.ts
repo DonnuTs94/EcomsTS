@@ -12,4 +12,18 @@ router.post(
   orderController.createOder
 )
 
+router.get(
+  "/",
+  verifyToken,
+  authorizePermission(Permission.READ_ORDER),
+  orderController.getAllOrdersUser
+)
+
+router.get(
+  "/:id",
+  verifyToken,
+  authorizePermission(Permission.READ_ORDER),
+  orderController.getOrderUserById
+)
+
 export default router

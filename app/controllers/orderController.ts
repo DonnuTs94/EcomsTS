@@ -1,6 +1,11 @@
-import { Request, Response, response } from "express"
-import { deleteManyCart, foundCartIds } from "../services/cartService"
-import { createOrder, foundAllOrder } from "../services/orderService"
+import { Request, Response } from "express"
+import { deleteManyCart, findCartIds } from "../services/cartService"
+import {
+  createOrder,
+  findAllOrder,
+  findAllOrdersUser,
+  findOrderUserById,
+} from "../services/orderService"
 import { createOrderItem } from "../services/orderItemService"
 import { getProductIds, updateManyQuantity } from "../services/productService"
 
@@ -10,7 +15,7 @@ const orderController = {
       const { cartIds, amount, cardNumber, cvv, expiryMonth, expiryYear } =
         req.body
 
-      const cartData = await foundCartIds(cartIds)
+      const cartData = await findCartIds(cartIds)
 
       if (cartIds.length !== cartData.length) {
         return res.status(400).json({
@@ -46,7 +51,7 @@ const orderController = {
         sum += item.total
       })
 
-      const orderData = await foundAllOrder()
+      const orderData = await findAllOrder()
 
       let createInvoiceNumber = Number(0)
 
@@ -62,15 +67,15 @@ const orderController = {
 
       const currentDate = new Date()
 
-      const foundProductIdInCart = cartData.map((item) => {
+      const findProductIdInCart = cartData.map((item) => {
         return item.productId
       })
 
-      const foundQtyProductInCart = cartData.map((item) => {
+      const findQtyProductInCart = cartData.map((item) => {
         return item.quantity
       })
 
-      const productIds = await getProductIds(foundProductIdInCart as number[])
+      const productIds = await getProductIds(findProductIdInCart as number[])
 
       productIds.map((data) => {
         if (!data) {
@@ -80,12 +85,12 @@ const orderController = {
         }
       })
 
-      const foundQtyProduct = productIds.map((item) => {
+      const findQtyProduct = productIds.map((item) => {
         return item.quantity
       })
 
-      const isQuantityExceeded = foundQtyProductInCart.some((qty, index) => {
-        return qty > foundQtyProduct[index]
+      const isQuantityExceeded = findQtyProductInCart.some((qty, index) => {
+        return qty > findQtyProduct[index]
       })
 
       if (isQuantityExceeded) {
@@ -113,13 +118,13 @@ const orderController = {
         }
       })
 
-      const newProductQty = foundQtyProduct.map((item, i) => {
-        return item - foundQtyProductInCart[i]
+      const newProductQty = findQtyProduct.map((item, i) => {
+        return item - findQtyProductInCart[i]
       })
 
       await createOrderItem(orderItemData)
 
-      await updateManyQuantity(foundProductIdInCart as [], newProductQty)
+      await updateManyQuantity(findProductIdInCart as [], newProductQty)
 
       await deleteManyCart(cartIds)
 
@@ -129,6 +134,36 @@ const orderController = {
       })
     } catch (err: any) {
       console.log(err)
+      return res.status(500).json({
+        message: "Server error",
+      })
+    }
+  },
+  getAllOrdersUser: async (req: Request, res: Response) => {
+    try {
+      const currentUser = Number(req.user?.id)
+
+      const getAllUserOrders = await findAllOrdersUser(currentUser)
+
+      return res.status(200).json({
+        message: "Success get all orders user!",
+        data: getAllUserOrders,
+      })
+    } catch (err: any) {
+      return res.status(500).json({
+        message: "Server error",
+      })
+    }
+  },
+  getOrderUserById: async (req: Request, res: Response) => {
+    try {
+      const getOrderDetail = await findOrderUserById(Number(req.params.id))
+
+      return res.status(200).json({
+        message: "Success get order detail",
+        data: getOrderDetail,
+      })
+    } catch (err: any) {
       return res.status(500).json({
         message: "Server error",
       })

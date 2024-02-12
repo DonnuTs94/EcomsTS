@@ -85,7 +85,7 @@ const deleteCartUserLogin = async (cartId: number) => {
   })
 }
 
-const foundCartIds = async (cartId: number[]) => {
+const findCartIds = async (cartId: number[]) => {
   return await prisma.cart.findMany({
     where: {
       id: {
@@ -115,6 +115,6 @@ export {
   getAllCartUserLogin,
   foundCartById,
   deleteCartUserLogin,
-  foundCartIds,
+  findCartIds,
   deleteManyCart,
 }
