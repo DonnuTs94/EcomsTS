@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import { foundCartIds } from "../services/cartService"
 import { createOrder, foundAllOrder } from "../services/orderService"
 import { createOrderItem } from "../services/orderItemService"
+import { getProductIds } from "../services/productService"
 
 const orderController = {
   createOder: async (req: Request, res: Response) => {
@@ -34,9 +35,30 @@ const orderController = {
 
       const currentDate = new Date()
 
-      //   lakukan compare quantity yang ada di cart
-      // dengan quantity yang ada saat ini
-      //  ketika tidak ada maka return quantity product A tidak mencukupi
+      const foundProductIdInCart = cartData.map((item) => {
+        return item.productId
+      })
+
+      const foundQtyProductInCart = cartData.map((item) => {
+        return item.quantity
+      })
+
+      const productIds = await getProductIds(foundProductIdInCart as number[])
+
+      const foundQtyProduct = productIds.map((item) => {
+        return item.quantity
+      })
+
+      const isQuantityExceeded = foundQtyProductInCart.some((qty, index) => {
+        return qty > foundQtyProduct[index]
+      })
+
+      if (isQuantityExceeded) {
+        return res.status(400).json({
+          message:
+            "The requested quantity exceeds the available stock for one or more products",
+        })
+      }
 
       const createOrderData = await createOrder(
         sum,

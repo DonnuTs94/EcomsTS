@@ -80,6 +80,16 @@ const updatePrice = async (productId: number, price: number) => {
     },
   })
 }
+
+const getProductIds = async (productIds: number[]) => {
+  return await prisma.product.findMany({
+    where: {
+      id: {
+        in: productIds,
+      },
+    },
+  })
+}
 export {
   getDataProductById,
   getAllProduct,
@@ -87,5 +97,6 @@ export {
   hardDelete,
   softDelete,
   getProductId,
+  getProductIds,
   updatePrice,
 }
