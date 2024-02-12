@@ -1,17 +1,26 @@
-import { Request, Response } from "express"
-import { foundCartIds } from "../services/cartService"
+import { Request, Response, response } from "express"
+import { deleteManyCart, foundCartIds } from "../services/cartService"
 import { createOrder, foundAllOrder } from "../services/orderService"
 import { createOrderItem } from "../services/orderItemService"
-import { getProductIds } from "../services/productService"
+import { getProductIds, updateManyQuantity } from "../services/productService"
 
 const orderController = {
   createOder: async (req: Request, res: Response) => {
     try {
-      const { cartIds } = req.body
-      const getCartData = cartIds.map((id: number) => {
-        return id
-      })
-      const cartData = await foundCartIds(getCartData.id)
+      const { cartIds, amount, cardNumber, cvv, expiryMonth, expiryYear } =
+        req.body
+
+      const cartData = await foundCartIds(cartIds)
+
+      const dataPayment = {
+        amount,
+        cardNumber,
+        cvv,
+        expiryMonth,
+        expiryYear,
+      }
+      console.log(dataPayment)
+      // console.log(cartData)
 
       let sum = 0
 
@@ -60,24 +69,45 @@ const orderController = {
         })
       }
 
-      const createOrderData = await createOrder(
-        sum,
-        currentDate,
-        createInvoiceNumber,
-        "waitingForPayment"
-      )
+      await fetch("http://localhost:3000/pay", {
+        method: "POST",
+        body: JSON.stringify(dataPayment),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data)
+        })
+      // console.log(response.)
 
-      const orderItemData = cartData.map((item) => {
-        return {
-          quantity: item.quantity,
-          price: item.Product?.price || 0,
-          total: item.total,
-          orderId: Number(createOrderData.id),
-          productId: Number(item.productId),
-        }
+      // const createOrderData = await createOrder(
+      //   sum,
+      //   currentDate,
+      //   createInvoiceNumber,
+      //   "waitingForPayment"
+      // )
+
+      // const orderItemData = cartData.map((item) => {
+      //   return {
+      //     quantity: item.quantity,
+      //     price: item.Product?.price || 0,
+      //     total: item.total,
+      //     orderId: Number(createOrderData.id),
+      //     productId: Number(item.productId),
+      //   }
+      // })
+
+      const newProductQty = foundQtyProduct.map((item, i) => {
+        return item - foundQtyProductInCart[i]
       })
 
-      await createOrderItem(orderItemData)
+      // await createOrderItem(orderItemData)
+
+      // await updateManyQuantity(foundProductIdInCart as [], newProductQty)
+
+      // await deleteManyCart(cartIds)
 
       return res.status(200).json({
         message: "Success add new order",

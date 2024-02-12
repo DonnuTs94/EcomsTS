@@ -90,6 +90,22 @@ const getProductIds = async (productIds: number[]) => {
     },
   })
 }
+
+const updateManyQuantity = async (productIds: number[], newQty: number[]) => {
+  if (productIds.length !== newQty.length) {
+    throw new Error("ProductIds and newQty arrays must have the same length.")
+  }
+
+  const updates = productIds.map((productId, index) => {
+    return prisma.product.updateMany({
+      where: { id: productId },
+      data: { quantity: newQty[index] },
+    })
+  })
+
+  return await Promise.all(updates)
+}
+
 export {
   getDataProductById,
   getAllProduct,
@@ -99,4 +115,5 @@ export {
   getProductId,
   getProductIds,
   updatePrice,
+  updateManyQuantity,
 }

@@ -85,13 +85,25 @@ const deleteCartUserLogin = async (cartId: number) => {
   })
 }
 
-const foundCartIds = async (cartId: number) => {
+const foundCartIds = async (cartId: number[]) => {
   return await prisma.cart.findMany({
     where: {
-      id: cartId,
+      id: {
+        in: cartId,
+      },
     },
     include: {
       Product: true,
+    },
+  })
+}
+
+const deleteManyCart = async (cartId: number[]) => {
+  return await prisma.cart.deleteMany({
+    where: {
+      id: {
+        in: cartId,
+      },
     },
   })
 }
@@ -104,4 +116,5 @@ export {
   foundCartById,
   deleteCartUserLogin,
   foundCartIds,
+  deleteManyCart,
 }
