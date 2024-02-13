@@ -17,4 +17,7 @@ router.use("/product", productRoute)
 router.use("/cart", cartRoute)
 router.use("/order", orderRoute)
 
+// import expressListRoutes from "express-list-routes"
+// expressListRoutes(router)
+
 export default router

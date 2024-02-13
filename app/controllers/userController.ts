@@ -15,7 +15,7 @@ const userController = {
         lastName,
       }: UserRegister = req.body
 
-      const foundRoleUser = await getRoleId("user")
+      const findRoleUser = await getRoleId("user")
 
       const emailExist = await findEmail(email)
 
@@ -25,7 +25,7 @@ const userController = {
         })
       }
 
-      const RoleId = Number(foundRoleUser?.id)
+      const RoleId = Number(findRoleUser?.id)
 
       await createUser(
         username,

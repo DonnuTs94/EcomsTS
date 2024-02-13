@@ -34,9 +34,9 @@ const productController = {
         const files = req.files as Express.Multer.File[]
         let imagesPath: string[] = []
 
-        const foundCategoryId = await getCategoryById(categoryId)
+        const findCategoryId = await getCategoryById(categoryId)
 
-        if (!foundCategoryId) {
+        if (!findCategoryId) {
           return res.status(400).json({
             message: "Category does'nt exist!",
           })
@@ -48,7 +48,7 @@ const productController = {
             price: Number(price),
             description,
             quantity: Number(quantity),
-            categoryId: Number(foundCategoryId?.id),
+            categoryId: Number(findCategoryId?.id),
             userId: req.user?.id,
           },
         })
@@ -149,16 +149,16 @@ const productController = {
     try {
       const productId = Number(req.params.id)
 
-      const foundProductId = await getProductId(productId)
+      const findProductId = await getProductId(productId)
 
-      if (!foundProductId) {
+      if (!findProductId) {
         return res.status(400).json({
           message: "Product does'nt exist!",
         })
       }
-      const productImages = await getAllProductImages(foundProductId.id)
+      const productImages = await getAllProductImages(findProductId.id)
 
-      await hardDelete(foundProductId.id)
+      await hardDelete(findProductId.id)
 
       productImages.map((image) => {
         fs.unlinkSync("public/" + image.imageUrl)
@@ -177,15 +177,15 @@ const productController = {
     try {
       const productId = Number(req.params.id)
 
-      const foundProductId = await getProductId(productId)
+      const findProductId = await getProductId(productId)
 
-      if (!foundProductId) {
+      if (!findProductId) {
         return res.status(400).json({
           message: "Product does'nt exist!",
         })
       }
 
-      await softDelete(foundProductId.id)
+      await softDelete(findProductId.id)
 
       return res.status(200).json({
         message: "Successfully delete product!",

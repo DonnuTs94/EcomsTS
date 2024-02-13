@@ -2,8 +2,8 @@ import { Request, Response } from "express"
 import {
   addProductToCart,
   deleteCartUserLogin,
-  foundCartById,
-  foundCartByProductId,
+  findCartById,
+  findCartByProductId,
   getAllCartUserLogin,
   updateCartQuantity,
 } from "../services/cartService"
@@ -29,7 +29,7 @@ const cartController = {
         })
       }
 
-      const productIsExist = await foundCartByProductId(
+      const productIsExist = await findCartByProductId(
         Number(productId),
         userId
       )
@@ -65,39 +65,39 @@ const cartController = {
         })
       }
 
-      const foundCartData = await foundCartById(Number(cartId))
+      const findCartData = await findCartById(Number(cartId))
 
-      if (!foundCartData) {
+      if (!findCartData) {
         return res.status(400).json({
           message: "Cart does'nt exist!",
         })
       }
 
-      const foundProductData = await getProductId(
-        Number(foundCartData?.productId)
+      const findProductData = await getProductId(
+        Number(findCartData?.productId)
       )
 
       if (
-        !foundCartData ||
-        typeof foundCartData.quantity !== "number" ||
-        !foundProductData ||
-        typeof foundProductData.price !== "number"
+        !findCartData ||
+        typeof findCartData.quantity !== "number" ||
+        !findProductData ||
+        typeof findProductData.price !== "number"
       ) {
         return res.status(400).json({
           message: "Invalid cart data or product data",
         })
       }
 
-      if (foundProductData.quantity < quantity) {
+      if (findProductData.quantity < quantity) {
         return res.status(400).json({
           message:
             "The requested quantity exceeds the available stock for this product",
         })
       }
 
-      const total = quantity * foundProductData.price
+      const total = quantity * findProductData.price
 
-      await updateCartQuantity(foundCartData.id, quantity, total)
+      await updateCartQuantity(findCartData.id, quantity, total)
 
       return res.status(200).json({
         message: "Successfully update cart quantity",
@@ -133,9 +133,9 @@ const cartController = {
     try {
       const { cartId } = req.body
 
-      const foundCartData = await foundCartById(Number(cartId))
+      const findCartData = await findCartById(Number(cartId))
 
-      if (!foundCartData) {
+      if (!findCartData) {
         return res.status(400).json({
           message: "Cart does'nt exist!",
         })

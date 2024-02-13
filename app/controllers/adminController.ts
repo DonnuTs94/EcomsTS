@@ -15,9 +15,9 @@ const adminController = {
         lastName,
       }: UserRegister = req.body
 
-      const foundRoleAdmin = await getRoleId("administrator")
+      const findRoleAdmin = await getRoleId("administrator")
 
-      const RoleId = Number(foundRoleAdmin?.id)
+      const RoleId = Number(findRoleAdmin?.id)
 
       const emailExist = await findEmail(email)
 

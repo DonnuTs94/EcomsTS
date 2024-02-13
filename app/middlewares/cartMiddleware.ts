@@ -8,13 +8,13 @@ const verifyCartOwner = async (
   res: Response,
   next: NextFunction
 ) => {
-  const foundCartOwner = await prisma.cart.findFirst({
+  const findCartOwner = await prisma.cart.findFirst({
     where: {
       userId: req.user?.id,
     },
   })
 
-  if (!foundCartOwner) {
+  if (!findCartOwner) {
     return res.status(400).json({
       message: "Restricted!",
     })

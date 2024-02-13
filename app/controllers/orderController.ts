@@ -9,6 +9,7 @@ import {
 } from "../services/orderService"
 import { createOrderItem } from "../services/orderItemService"
 import { getProductIds, updateManyQuantity } from "../services/productService"
+import { fetchResponse } from "../api/dummyPaymentGateway"
 
 const prisma = new PrismaClient()
 
@@ -39,20 +40,6 @@ const orderController = {
           cvv,
           expiryMonth,
           expiryYear,
-        }
-
-        const fetchResponse = await fetch("http://localhost:3000/pay", {
-          method: "POST",
-          body: JSON.stringify(dataPayment),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }).then((response) => response.json())
-
-        if (fetchResponse.message === "Payment failed") {
-          return res.status(400).json({
-            message: "Payment failed!",
-          })
         }
 
         let sum = 0
@@ -107,6 +94,13 @@ const orderController = {
           return res.status(400).json({
             message:
               "The requested quantity exceeds the available stock for one or more products",
+          })
+        }
+
+        const responsePayment = await fetchResponse(dataPayment)
+        if (responsePayment.message === "Payment failed") {
+          return res.status(400).json({
+            message: "Payment failed!",
           })
         }
 

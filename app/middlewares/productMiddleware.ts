@@ -8,13 +8,13 @@ const verifyAdminOwnership = async (
   res: Response,
   next: NextFunction
 ) => {
-  const foundAdminProduct = await prisma.product.findFirst({
+  const findAdminProduct = await prisma.product.findFirst({
     where: {
       userId: req.user?.id,
     },
   })
 
-  if (foundAdminProduct?.userId !== req.user?.id) {
+  if (findAdminProduct?.userId !== req.user?.id) {
     return res.status(400).json({
       message: "Restricted!",
     })

@@ -18,7 +18,7 @@ const addProductToCart = async (
   })
 }
 
-const foundCartByProductId = async (productId: number, userId: number) => {
+const findCartByProductId = async (productId: number, userId: number) => {
   return await prisma.cart.findFirst({
     where: {
       productId: productId,
@@ -27,7 +27,7 @@ const foundCartByProductId = async (productId: number, userId: number) => {
   })
 }
 
-const foundCartById = async (cartId: number) => {
+const findCartById = async (cartId: number) => {
   return await prisma.cart.findFirst({
     where: {
       id: cartId,
@@ -111,10 +111,10 @@ const deleteManyCart = async (cartId: number[]) => {
 
 export {
   addProductToCart,
-  foundCartByProductId,
+  findCartByProductId,
   updateCartQuantity,
   getAllCartUserLogin,
-  foundCartById,
+  findCartById,
   deleteCartUserLogin,
   findCartIds,
   deleteManyCart,
