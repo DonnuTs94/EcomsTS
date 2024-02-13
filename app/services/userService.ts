@@ -28,9 +28,7 @@ const createUser = async (
 }
 
 const findRole = async () => {
-  const findRole = await prisma.role.findMany()
-
-  return findRole
+  return await prisma.role.findMany()
 }
 
 const findEmail = async (email: string) => {

@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import { UserRegister } from "../interface/userInterface"
 import { createUser, findEmail, findRole } from "../services/userService"
 import { getRoleId } from "../helper/role"
+import { Role } from "../enum/authorization"
 
 const userController = {
   register: async (req: Request, res: Response) => {
@@ -15,7 +16,7 @@ const userController = {
         lastName,
       }: UserRegister = req.body
 
-      const findRoleUser = await getRoleId("user")
+      const findRoleUser = await getRoleId(Role.REGULAR_USER)
 
       const emailExist = await findEmail(email)
 

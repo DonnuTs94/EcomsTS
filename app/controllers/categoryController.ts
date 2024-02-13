@@ -1,5 +1,9 @@
 import { Request, Response } from "express"
-import { createCategory } from "../services/categoryService"
+import {
+  createCategory,
+  editCategory,
+  getCategoryById,
+} from "../services/categoryService"
 import { PrismaError } from "../enum/dataBaseError"
 
 const categoryController = {
@@ -20,6 +24,31 @@ const categoryController = {
           message: "Category name already exist!",
         })
       }
+      return res.status(500).json({
+        message: "Server error",
+      })
+    }
+  },
+  edit: async (req: Request, res: Response) => {
+    try {
+      const { categoryId, name } = req.body
+
+      if (!categoryId || !name) {
+        return res.status(400).json({
+          message: "Input must be filled!",
+        })
+      }
+
+      const findCategoryName = await getCategoryById(categoryId)
+
+      if (findCategoryName?.name === name) {
+        return res.status(400).json({
+          message: "Category name is already exist!",
+        })
+      }
+
+      await editCategory(categoryId, name)
+    } catch (err: any) {
       return res.status(500).json({
         message: "Server error",
       })

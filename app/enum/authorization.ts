@@ -1,5 +1,6 @@
 enum Role {
-  ADMINISTRATOR = "administrator",
+  ADMIN = "admin",
+  SELLER = "seller",
   REGULAR_USER = "user",
 }
 
@@ -27,7 +28,8 @@ enum Permission {
 }
 
 enum PermissionAssignment {
-  ADMINISTRATOR = "administrator",
+  ADMIN = "admin",
+  SELLER = "seller",
   REGULAR_USER = "user",
 }
 

@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from "express"
 import multer from "multer"
 import fs from "fs"
-import { UploadOptions } from "../interface/uploaderInterface" // Assuming you have an interface for upload options
+import { UploadOptions } from "../interface/uploaderInterface"
 import { upload } from "../lib/uploader"
 import { PrismaClient } from "@prisma/client"
+import { MAX_FILE_LENGTH } from "../constant/uploader"
+import { LIMIT_FILE_SIZE } from "../constant/multerError"
 
 const prisma = new PrismaClient()
 
@@ -15,7 +17,7 @@ const validateFilesUpload = (options: UploadOptions) => {
 
     const handleMulterError = (err: any) => {
       if (err instanceof multer.MulterError) {
-        if (err.code === "LIMIT_FILE_SIZE") {
+        if (err.code === LIMIT_FILE_SIZE) {
           return res.status(400).json({
             message: "File too large",
           })
@@ -65,9 +67,7 @@ const validateMaxLengthImage = async (
     },
   })
 
-  const maxImageLength = 6
-
-  if (productImageLength.length < maxImageLength) {
+  if (productImageLength.length < MAX_FILE_LENGTH) {
     next()
   } else {
     return res.status(400).json({

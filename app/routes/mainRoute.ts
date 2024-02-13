@@ -6,6 +6,7 @@ import categoryRoute from "./categoryRoute"
 import productRoute from "./productRoute"
 import cartRoute from "./cartRoute"
 import orderRoute from "./orderRoute"
+import sellerRoute from "./sellerOrderRoute"
 
 const router = Router()
 
@@ -16,6 +17,7 @@ router.use("/category", categoryRoute)
 router.use("/product", productRoute)
 router.use("/cart", cartRoute)
 router.use("/order", orderRoute)
+router.use("/seller", sellerRoute)
 
 // import expressListRoutes from "express-list-routes"
 // expressListRoutes(router)

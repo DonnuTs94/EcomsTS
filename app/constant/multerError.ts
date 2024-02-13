@@ -1,0 +1,3 @@
+const LIMIT_FILE_SIZE = "LIMIT_FILE_SIZE"
+
+export { LIMIT_FILE_SIZE }

@@ -1,5 +1,6 @@
 export const Role = {
-  ADMINISTRATOR: "administrator",
+  ADMIN: "admin",
+  SELLER: "seller",
   REGULAR_USER: "user",
 }
 
@@ -28,7 +29,13 @@ export const Permission = {
 
 // Permission.BROWSE_PRODUCTS
 export const PermissionAssignment = {
-  [Role.ADMINISTRATOR]: [
+  [Role.ADMIN]: [
+    Permission.EDIT_CATEGORY,
+    Permission.ADD_CATEGORY,
+    Permission.DELETE_CATEGORY,
+  ],
+
+  [Role.SELLER]: [
     Permission.BROWSE_PRODUCTS,
     Permission.READ_PRODUCT,
     Permission.EDIT_PRODUCT,
@@ -37,9 +44,6 @@ export const PermissionAssignment = {
 
     Permission.BROWSE_CATEGORIES,
     Permission.READ_CATEGORY,
-    Permission.EDIT_CATEGORY,
-    Permission.ADD_CATEGORY,
-    Permission.DELETE_CATEGORY,
 
     Permission.BROWSE_ORDERS,
   ],

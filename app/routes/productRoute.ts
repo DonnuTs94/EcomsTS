@@ -1,7 +1,6 @@
 import { Router } from "express"
 import { authorizePermission, verifyToken } from "../middlewares/authMiddleware"
 import { Permission } from "../enum/authorization"
-import { upload } from "../lib/uploader"
 import productController from "../controllers/productController"
 import { verifyAdminOwnership } from "../middlewares/productMiddleware"
 import productImageController from "../controllers/productImageController"
@@ -9,6 +8,13 @@ import {
   validateFilesUpload,
   validateMaxLengthImage,
 } from "../middlewares/imageValidator"
+import {
+  FILE_NAME,
+  FILE_PREFIX,
+  FILE_TYPE,
+  PATH,
+  SIZE_5MB,
+} from "../constant/uploader"
 
 const router = Router()
 
@@ -17,11 +23,11 @@ router.post(
   verifyToken,
   authorizePermission(Permission.ADD_PRODUCT),
   validateFilesUpload({
-    dynamicDestination: "public",
-    acceptedFileTypes: ["jpg", "png", "jpeg"],
-    fileName: "product_url",
-    filePrefix: "product_pict_url",
-    maxSize: 5 * 1024 * 1024,
+    dynamicDestination: PATH,
+    acceptedFileTypes: FILE_TYPE,
+    fileName: FILE_NAME,
+    filePrefix: FILE_PREFIX,
+    maxSize: SIZE_5MB,
   }),
   productController.createProduct
 )
@@ -60,11 +66,11 @@ router.post(
   verifyAdminOwnership,
   validateMaxLengthImage,
   validateFilesUpload({
-    dynamicDestination: "public",
-    acceptedFileTypes: ["jpg", "png", "jpeg"],
-    fileName: "product_url",
-    filePrefix: "product_pict_url",
-    maxSize: 5 * 1024 * 1024,
+    dynamicDestination: PATH,
+    acceptedFileTypes: FILE_TYPE,
+    fileName: FILE_NAME,
+    filePrefix: FILE_PREFIX,
+    maxSize: SIZE_5MB,
   }),
   productImageController.addImage
 )

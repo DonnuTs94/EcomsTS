@@ -71,7 +71,7 @@ const findOrderUserById = async (oderId: number) => {
   })
 }
 
-const adminAllOrders = async (adminId: number) => {
+const sellerAllOrders = async (adminId: number) => {
   const adminOrders = await prisma.product.findMany({
     where: {
       userId: adminId,
@@ -123,5 +123,5 @@ export {
   findAllOrder,
   findAllOrdersUser,
   findOrderUserById,
-  adminAllOrders,
+  sellerAllOrders,
 }

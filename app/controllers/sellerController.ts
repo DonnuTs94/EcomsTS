@@ -1,11 +1,12 @@
 import { Request, Response } from "express"
+import { sellerAllOrders } from "../services/orderService"
 import { UserRegister } from "../interface/userInterface"
-import { createUser, findEmail } from "../services/userService"
 import { getRoleId } from "../helper/role"
 import { Role } from "../enum/authorization"
+import { createUser, findEmail } from "../services/userService"
 
-const adminController = {
-  createAdmin: async (req: Request, res: Response) => {
+const sellerController = {
+  createSeller: async (req: Request, res: Response) => {
     try {
       const {
         username,
@@ -16,9 +17,9 @@ const adminController = {
         lastName,
       }: UserRegister = req.body
 
-      const findRoleAdmin = await getRoleId(Role.ADMIN)
+      const findRoleSeller = await getRoleId(Role.SELLER)
 
-      const RoleId = Number(findRoleAdmin?.id)
+      const RoleId = Number(findRoleSeller?.id)
 
       const emailExist = await findEmail(email)
 
@@ -47,6 +48,22 @@ const adminController = {
       })
     }
   },
+  getAllOrder: async (req: Request, res: Response) => {
+    try {
+      const currentUser = Number(req.user?.id)
+
+      const allAdminOrderData = await sellerAllOrders(currentUser)
+
+      return res.status(200).json({
+        message: "Success get all admin orders",
+        data: allAdminOrderData,
+      })
+    } catch (err: any) {
+      return res.status(500).json({
+        message: "Server error",
+      })
+    }
+  },
 }
 
-export default adminController
+export default sellerController
