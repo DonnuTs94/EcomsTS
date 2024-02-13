@@ -71,4 +71,57 @@ const findOrderUserById = async (oderId: number) => {
   })
 }
 
-export { createOrder, findAllOrder, findAllOrdersUser, findOrderUserById }
+const adminAllOrders = async (adminId: number) => {
+  const adminOrders = await prisma.product.findMany({
+    where: {
+      userId: adminId,
+    },
+
+    select: {
+      name: true,
+      Category: {
+        select: {
+          name: true,
+        },
+      },
+      price: true,
+      OrderItem: {
+        select: {
+          quantity: true,
+          total: true,
+          Order: {
+            select: {
+              invoice: true,
+              date: true,
+              status: true,
+            },
+          },
+        },
+      },
+    },
+  })
+
+  const filterAdminOrders = adminOrders.filter((orderItem) => {
+    orderItem.OrderItem.filter((order) => {
+      if (order.Order === null) {
+        return false
+      }
+      return true
+    })
+    if (orderItem.OrderItem.length === 0) {
+      return false
+    }
+
+    return true
+  })
+
+  return filterAdminOrders
+}
+
+export {
+  createOrder,
+  findAllOrder,
+  findAllOrdersUser,
+  findOrderUserById,
+  adminAllOrders,
+}

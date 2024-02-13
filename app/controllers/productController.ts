@@ -21,67 +21,69 @@ const prisma = new PrismaClient()
 const productController = {
   createProduct: async (req: Request, res: Response) => {
     try {
-      const { name, price, description, quantity } = req.body
-      const categoryId = req.body.categoryId
+      await prisma.$transaction(async () => {
+        const { name, price, description, quantity } = req.body
+        const categoryId = req.body.categoryId
 
-      if (!name || !price || !description || !quantity || !categoryId) {
-        return res.status(400).json({
-          message: "Input must be filled",
-        })
-      }
+        if (!name || !price || !description || !quantity || !categoryId) {
+          return res.status(400).json({
+            message: "Input must be filled",
+          })
+        }
 
-      const files = req.files as Express.Multer.File[]
-      let imagesPath: string[] = []
+        const files = req.files as Express.Multer.File[]
+        let imagesPath: string[] = []
 
-      const foundCategoryId = await getCategoryById(categoryId)
+        const foundCategoryId = await getCategoryById(categoryId)
 
-      if (!foundCategoryId) {
-        return res.status(400).json({
-          message: "Category does'nt exist!",
-        })
-      }
+        if (!foundCategoryId) {
+          return res.status(400).json({
+            message: "Category does'nt exist!",
+          })
+        }
 
-      const createProductData = await prisma.product.create({
-        data: {
-          name,
-          price: Number(price),
-          description,
-          quantity: Number(quantity),
-          categoryId: Number(foundCategoryId?.id),
-          userId: req.user?.id,
-        },
-      })
-
-      if (files && files.length > 0) {
-        imagesPath = files.map((file) => file.filename)
-        const productImagesData = imagesPath.map((item) => {
-          return {
-            imageUrl: item,
-            productId: createProductData.id,
-          }
+        const createProductData = await prisma.product.create({
+          data: {
+            name,
+            price: Number(price),
+            description,
+            quantity: Number(quantity),
+            categoryId: Number(foundCategoryId?.id),
+            userId: req.user?.id,
+          },
         })
 
-        await createMultipleImages(productImagesData)
-      }
+        if (files && files.length > 0) {
+          imagesPath = files.map((file) => file.filename)
+          const productImagesData = imagesPath.map((item) => {
+            return {
+              imageUrl: item,
+              productId: createProductData.id,
+            }
+          })
 
-      const dataResult = await prisma.product.findFirst({
-        where: {
-          id: createProductData.id,
-        },
-        include: {
-          ProductImage: true,
-          User: {
-            select: {
-              id: true,
-              username: true,
+          await createMultipleImages(productImagesData)
+        }
+
+        const dataResult = await prisma.product.findFirst({
+          where: {
+            id: createProductData.id,
+          },
+          include: {
+            ProductImage: true,
+            User: {
+              select: {
+                id: true,
+                username: true,
+              },
             },
           },
-        },
-      })
+        })
 
-      return res.status(200).json({
-        message: "Successfully create new product!",
-        data: dataResult,
+        return res.status(200).json({
+          message: "Successfully create new product!",
+          data: dataResult,
+        })
       })
     } catch (err: any) {
       return res.status(500).json({

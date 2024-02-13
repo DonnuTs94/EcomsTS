@@ -12,15 +12,16 @@ const findOrderOwner = async (
 
   const orderOwner = await prisma.order.findFirst({
     where: {
-      userId: currentUser,
+      id: Number(req.params.id),
     },
   })
 
-  if (!orderOwner) {
+  if (orderOwner?.userId !== currentUser) {
     return res.status(400).json({
       message: "Restricted!",
     })
   }
+  next()
 }
 
 export { findOrderOwner }

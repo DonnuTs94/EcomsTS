@@ -29,7 +29,10 @@ const cartController = {
         })
       }
 
-      const productIsExist = await foundCartByProductId(Number(productId))
+      const productIsExist = await foundCartByProductId(
+        Number(productId),
+        userId
+      )
       const total = Number(productData.price * quantity)
 
       if (productIsExist) {
@@ -47,7 +50,6 @@ const cartController = {
         message: "Success add product to cart!",
       })
     } catch (err: any) {
-      console.log(err)
       return res.status(500).json({
         message: "Server error",
       })

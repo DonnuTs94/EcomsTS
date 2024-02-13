@@ -40,6 +40,8 @@ export const PermissionAssignment = {
     Permission.EDIT_CATEGORY,
     Permission.ADD_CATEGORY,
     Permission.DELETE_CATEGORY,
+
+    Permission.BROWSE_ORDERS,
   ],
 
   [Role.REGULAR_USER]: [

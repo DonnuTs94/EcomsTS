@@ -18,10 +18,11 @@ const addProductToCart = async (
   })
 }
 
-const foundCartByProductId = async (productId: number) => {
+const foundCartByProductId = async (productId: number, userId: number) => {
   return await prisma.cart.findFirst({
     where: {
       productId: productId,
+      userId,
     },
   })
 }
