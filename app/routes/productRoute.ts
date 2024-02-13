@@ -5,6 +5,10 @@ import { upload } from "../lib/uploader"
 import productController from "../controllers/productController"
 import { verifyAdminOwnership } from "../middlewares/productMiddleware"
 import productImageController from "../controllers/productImageController"
+import {
+  validateFilesUpload,
+  validateMaxLengthImage,
+} from "../middlewares/imageValidator"
 
 const router = Router()
 
@@ -12,12 +16,12 @@ router.post(
   "/",
   verifyToken,
   authorizePermission(Permission.ADD_PRODUCT),
-  upload({
+  validateFilesUpload({
     dynamicDestination: "public",
     acceptedFileTypes: ["jpg", "png", "jpeg"],
     fileName: "product_url",
     filePrefix: "product_pict_url",
-    maxSize: 6 * 1024 * 1024,
+    maxSize: 5 * 1024 * 1024,
   }),
   productController.createProduct
 )
@@ -54,12 +58,13 @@ router.post(
   verifyToken,
   authorizePermission(Permission.ADD_PRODUCT),
   verifyAdminOwnership,
-  upload({
+  validateMaxLengthImage,
+  validateFilesUpload({
     dynamicDestination: "public",
     acceptedFileTypes: ["jpg", "png", "jpeg"],
     fileName: "product_url",
     filePrefix: "product_pict_url",
-    maxSize: 6 * 1024 * 1024,
+    maxSize: 5 * 1024 * 1024,
   }),
   productImageController.addImage
 )
