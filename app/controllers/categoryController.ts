@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import {
   createCategory,
   editCategory,
+  getAllCategory,
   getCategoryById,
 } from "../services/categoryService"
 import { PrismaError } from "../enum/dataBaseError"
@@ -48,6 +49,24 @@ const categoryController = {
       }
 
       await editCategory(categoryId, name)
+
+      return res.status(200).json({
+        message: "Success update category",
+      })
+    } catch (err: any) {
+      return res.status(500).json({
+        message: "Server error",
+      })
+    }
+  },
+  getAllCategory: async (req: Request, res: Response) => {
+    try {
+      const categoryData = getAllCategory()
+
+      return res.status(200).json({
+        message: "Success update category",
+        data: categoryData,
+      })
     } catch (err: any) {
       return res.status(500).json({
         message: "Server error",
