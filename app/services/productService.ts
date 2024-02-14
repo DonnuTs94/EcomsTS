@@ -23,26 +23,36 @@ const getProductId = async (productId: number) => {
   })
 }
 
-const getAllProduct = async (pagesize: number, offset: number) => {
+const getAllProduct = async (
+  product: string,
+  category: number,
+  pagesize: number,
+  offset: number
+) => {
   return await prisma.product.findMany({
     take: pagesize,
     skip: offset,
     where: {
+      name: {
+        contains: product,
+      },
+      ...(category ? { categoryId: category } : {}),
       deleted: false,
     },
     include: {
       Category: {
         select: {
-          id: true,
           name: true,
         },
       },
       ProductImage: {
         select: {
-          id: true,
           imageUrl: true,
         },
       },
+    },
+    orderBy: {
+      name: "asc",
     },
   })
 }

@@ -115,7 +115,7 @@ const productController = {
   },
   getAllProduct: async (req: Request, res: Response) => {
     try {
-      const { page } = req.query
+      const { product, category, page } = req.query
 
       const pageNumber = page ? parseInt(page as string, 10) : 1
 
@@ -125,19 +125,25 @@ const productController = {
         })
       }
 
-      const pageSize = 5
+      const pageSize = 10
       const offset = (pageNumber - 1) * Number(pageSize)
 
-      const productData = await getAllProduct(pageSize, offset)
+      // const productData = await getAllProduct(pageSize, offset)
+      const productData = await getAllProduct(
+        product as string,
+        Number(category),
+        pageSize,
+        offset
+      )
 
-      const totalProducts = (await getTotalProduct()).length
-      const totalPages = Math.ceil(totalProducts / pageSize)
+      // const totalProducts = (await getTotalProduct()).length
+      // const totalPages = Math.ceil(totalProducts / pageSize)
 
       return res.status(200).json({
         message: "Successfully get all product!",
         data: productData,
         currentPage: page,
-        totalPages: totalPages,
+        // totalPages: totalPages,
       })
     } catch (err: any) {
       return res.status(500).json({
