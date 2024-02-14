@@ -61,10 +61,10 @@ const categoryController = {
   },
   getAllCategory: async (req: Request, res: Response) => {
     try {
-      const categoryData = getAllCategory()
+      const categoryData = await getAllCategory()
 
       return res.status(200).json({
-        message: "Success update category",
+        message: "Success get all categories",
         data: categoryData,
       })
     } catch (err: any) {
