@@ -12,12 +12,12 @@ const router = Router()
 
 router.use("/user", userRoute)
 router.use("/admin", adminRouter)
+router.use("/seller", sellerRoute)
 router.use("/auth", authRoute)
 router.use("/category", categoryRoute)
 router.use("/product", productRoute)
 router.use("/cart", cartRoute)
 router.use("/order", orderRoute)
-router.use("/seller", sellerRoute)
 
 // import expressListRoutes from "express-list-routes"
 // expressListRoutes(router)
