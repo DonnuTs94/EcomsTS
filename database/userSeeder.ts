@@ -7,11 +7,11 @@ const findRole = async () => {
   return await prisma.role.findMany()
 }
 
-const getRoleId = async (role) => {
+const getRoleId = async (role: string) => {
   const roleData = await findRole()
   const foundRole = roleData.find((data) => data.name === role)
 
-  return foundRole.id
+  return foundRole?.id
 }
 
 const main = async () => {
@@ -107,7 +107,6 @@ const main = async () => {
       },
     ]
 
-    // Create users in the database
     await prisma.user.createMany({ data: users })
 
     console.log("Users created successfully.")

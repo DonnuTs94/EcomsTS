@@ -1,10 +1,10 @@
-export const Role = {
+export const Role: Record<string, string> = {
   ADMIN: "admin",
   SELLER: "seller",
   REGULAR_USER: "user",
 }
 
-export const Permission = {
+export const Permission: Record<string, string> = {
   BROWSE_PRODUCTS: "browse_products",
   READ_PRODUCT: "read_product",
   EDIT_PRODUCT: "edit_product",
@@ -27,8 +27,7 @@ export const Permission = {
   ADD_ORDER: "add_order",
 }
 
-// Permission.BROWSE_PRODUCTS
-export const PermissionAssignment = {
+export const PermissionAssignment: Record<string, string[]> = {
   [Role.ADMIN]: [
     Permission.EDIT_CATEGORY,
     Permission.ADD_CATEGORY,

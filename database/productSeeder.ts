@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
-const findUsersByRole = async (roleName) => {
+const findUsersByRole = async (roleName: string) => {
   const role = await prisma.role.findFirst({
     where: {
       name: roleName,
@@ -11,7 +11,7 @@ const findUsersByRole = async (roleName) => {
   return role?.id
 }
 
-const findUserWithRoleSeller = async (roleId) => {
+const findUserWithRoleSeller = async (roleId: number) => {
   const usersWithRole = await prisma.user.findMany({
     where: {
       roleId: roleId,
@@ -20,23 +20,35 @@ const findUserWithRoleSeller = async (roleId) => {
   return usersWithRole.map((user) => user.id)
 }
 
+const findCategoryId = async () => {
+  const categoryData = await prisma.category.findMany()
+
+  const findCategoryId = categoryData.map((id) => {
+    return id.id
+  })
+
+  return findCategoryId
+}
+
 const main = async () => {
   try {
+    const categoryIds = await findCategoryId()
+
     // Find users with role 'seller' dynamically
     const roleId = await findUsersByRole("seller")
-    const sellerIds = await findUserWithRoleSeller(roleId)
-    console.log("Found seller IDs:", sellerIds)
+    const sellerIds = await findUserWithRoleSeller(Number(roleId))
 
-    // Assume we have 3 sellers now, and we want each seller to have 3 products
     const products = []
     for (const sellerId of sellerIds) {
       for (let i = 1; i <= 3; i++) {
+        const randomIndex = Math.floor(Math.random() * categoryIds.length)
+        const categoryId = categoryIds[randomIndex]
         const product = {
           name: `Product ${i} for Seller ${sellerId}`,
           price: 10.99 + i,
           description: `Description for Product ${i}`,
           quantity: 100,
-          categoryId: 6, // Assuming categoryId is fixed for all products
+          categoryId: categoryId,
           userId: sellerId,
         }
         products.push(product)

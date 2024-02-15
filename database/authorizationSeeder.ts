@@ -49,6 +49,9 @@ const main = async () => {
       }
     }
   }
+  console.log("All permission created successfully.")
+
+  await prisma.$disconnect()
 }
 
 main().catch((e) => {
