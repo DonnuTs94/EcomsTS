@@ -22,6 +22,11 @@ Install the required dependencies by running:
 npm install
 ```
 
+Generate database after fill the .env
+```bash
+npx prisma migrate dev
+```
+
 Seed the database with initial data
 
 ```bash
