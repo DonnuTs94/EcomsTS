@@ -5,14 +5,11 @@ import {
   createOrder,
   findAllOrder,
   findAllOrdersUser,
-  findOrderId,
   findOrderUserById,
-  updateStatusPayment,
 } from "../services/orderService"
 import { createOrderItem } from "../services/orderItemService"
 import { getProductIds, updateManyQuantity } from "../services/productService"
-import { fetchResponse } from "../api/dummyPaymentGateway"
-import { paymentCheck } from "../shcedule/paymentCheck"
+import { paymentCheck } from "../schedule/paymentCheck"
 
 const prisma = new PrismaClient()
 
@@ -128,7 +125,6 @@ const orderController = {
         })
       })
     } catch (err: any) {
-      console.log(err)
       return res.status(500).json({
         message: "Server error",
       })

@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { fetchResponse } from "../api/dummyPaymentGateway"
 import { updateStatusPayment } from "../services/orderService"
-import { updatePaymentToSuccess } from "../shcedule/paymentCheck"
+import { updatePaymentToSuccess } from "../schedule/paymentCheck"
 
 const paymentController = {
   createPayment: async (req: Request, res: Response) => {
@@ -32,7 +32,6 @@ const paymentController = {
         message: "Payment Successful",
       })
     } catch (err: any) {
-      console.log(err)
       return res.status(500).json({
         message: "Server error",
       })
