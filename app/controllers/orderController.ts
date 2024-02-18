@@ -10,6 +10,7 @@ import {
 import { createOrderItem } from "../services/orderItemService"
 import { getProductIds, updateManyQuantity } from "../services/productService"
 import { fetchResponse } from "../api/dummyPaymentGateway"
+import { paymentCheck } from "../shcedule/paymentCheck"
 
 const prisma = new PrismaClient()
 
@@ -32,14 +33,6 @@ const orderController = {
           return res.status(400).json({
             message: "Cart does'nt exist!",
           })
-        }
-
-        const dataPayment = {
-          amount,
-          cardNumber,
-          cvv,
-          expiryMonth,
-          expiryYear,
         }
 
         let sum = 0
@@ -97,19 +90,18 @@ const orderController = {
           })
         }
 
-        const responsePayment = await fetchResponse(dataPayment)
-        if (responsePayment.message === "Payment failed") {
-          return res.status(400).json({
-            message: "Payment failed!",
-          })
-        }
-
         const createOrderData = await createOrder(
           sum,
           currentDate,
           createInvoiceNumber,
-          "paid",
+          "waitingForPayment",
           Number(req.user?.id)
+        )
+
+        paymentCheck(
+          createOrderData.date,
+          createOrderData.id,
+          createOrderData.status
         )
 
         const orderItemData = cartData.map((item) => {
@@ -128,9 +120,9 @@ const orderController = {
 
         await createOrderItem(orderItemData)
 
-        await updateManyQuantity(findProductIdInCart as [], newProductQty)
+        // await updateManyQuantity(findProductIdInCart as [], newProductQty)
 
-        await deleteManyCart(cartIds)
+        // await deleteManyCart(cartIds)
 
         return res.status(200).json({
           message: "Success add new order",
@@ -138,6 +130,7 @@ const orderController = {
         })
       })
     } catch (err: any) {
+      console.log(err)
       return res.status(500).json({
         message: "Server error",
       })

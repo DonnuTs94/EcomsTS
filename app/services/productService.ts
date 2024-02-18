@@ -57,10 +57,6 @@ const getAllProduct = async (
   })
 }
 
-const getTotalProduct = async () => {
-  return prisma.product.findMany()
-}
-
 const hardDelete = async (productId: number) => {
   return await prisma.product.delete({
     where: {
@@ -116,14 +112,25 @@ const updateManyQuantity = async (productIds: number[], newQty: number[]) => {
   return await Promise.all(updates)
 }
 
+const countProductData = async (product: string, categoryId: number) => {
+  return await prisma.product.count({
+    where: {
+      name: {
+        contains: product,
+      },
+      ...(categoryId ? { categoryId: categoryId } : {}),
+    },
+  })
+}
+
 export {
   getDataProductById,
   getAllProduct,
-  getTotalProduct,
   hardDelete,
   softDelete,
   getProductId,
   getProductIds,
   updatePrice,
   updateManyQuantity,
+  countProductData,
 }

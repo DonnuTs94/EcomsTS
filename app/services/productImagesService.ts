@@ -25,4 +25,18 @@ const deleteProductImage = async (imageId: number) => {
   })
 }
 
-export { getAllProductImages, deleteProductImage, createMultipleImages }
+const createProductImage = async (imageUrl: string, productId: number) => {
+  return await prisma.productImages.create({
+    data: {
+      imageUrl,
+      productId,
+    },
+  })
+}
+
+export {
+  getAllProductImages,
+  deleteProductImage,
+  createMultipleImages,
+  createProductImage,
+}
