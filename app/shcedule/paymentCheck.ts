@@ -1,16 +1,23 @@
 import schedule from "node-schedule"
 import { PrismaClient } from "@prisma/client"
-import { addHours, addSeconds } from "date-fns"
+import { addSeconds, addMinutes } from "date-fns"
 import { findOrderItemFromOrderId } from "../services/orderItemService"
+import { updateStatusPayment } from "../services/orderService"
 
 const prisma = new PrismaClient()
 
-const paymentCheck = (date: Date, orderId: number, status: string) => {
-  const checkStatus = addSeconds(date, 1)
+const paymentCheck = (date: Date, orderId: number) => {
+  const checkStatus = addMinutes(date, 1)
 
   schedule.scheduleJob(checkStatus, async () => {
-    if (status === "waitingForPayment") {
-      console.log("Update status to canceled")
+    const order = await prisma.order.findUnique({
+      where: {
+        id: orderId,
+      },
+    })
+
+    if (order?.status === "waitingForPayment") {
+      console.log("Updating status to canceled for order:", orderId)
 
       await prisma.order.update({
         where: {
@@ -46,4 +53,13 @@ const paymentCheck = (date: Date, orderId: number, status: string) => {
   })
 }
 
-export { paymentCheck }
+const updatePaymentToSuccess = (date: Date, orderId: number) => {
+  const job = addSeconds(date, 20)
+
+  schedule.scheduleJob(job, async () => {
+    console.log("Order status is success")
+    await updateStatusPayment(orderId, "Success")
+  })
+}
+
+export { paymentCheck, updatePaymentToSuccess }

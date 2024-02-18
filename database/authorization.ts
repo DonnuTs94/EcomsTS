@@ -25,6 +25,9 @@ export const Permission: Record<string, string> = {
   BROWSE_ORDERS: "browse_orders",
   READ_ORDER: "read_order",
   ADD_ORDER: "add_order",
+  EDIT_ORDER: "edit_order",
+
+  ADD_PAYMENT: "add_payment",
 }
 
 export const PermissionAssignment: Record<string, string[]> = {
@@ -45,6 +48,7 @@ export const PermissionAssignment: Record<string, string[]> = {
     Permission.READ_CATEGORY,
 
     Permission.BROWSE_ORDERS,
+    Permission.EDIT_ORDER,
   ],
 
   [Role.REGULAR_USER]: [
@@ -62,5 +66,7 @@ export const PermissionAssignment: Record<string, string[]> = {
     Permission.BROWSE_ORDERS,
     Permission.READ_ORDER,
     Permission.ADD_ORDER,
+
+    Permission.ADD_PAYMENT,
   ],
 }

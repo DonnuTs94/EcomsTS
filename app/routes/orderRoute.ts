@@ -4,6 +4,7 @@ import { verifyToken, authorizePermission } from "../middlewares/authMiddleware"
 import { Permission } from "../enum/authorization"
 import { findOrderOwner } from "../middlewares/orderMiddleware"
 import paymentController from "../controllers/paymentController"
+import { paymentCondition } from "../middlewares/paymentMiddleware"
 
 const router = Router()
 
@@ -18,6 +19,8 @@ router.post(
   "/:id/payment",
   verifyToken,
   findOrderOwner,
+  authorizePermission(Permission.ADD_PAYMENT),
+  paymentCondition,
   paymentController.createPayment
 )
 

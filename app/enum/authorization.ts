@@ -25,6 +25,10 @@ enum Permission {
   BROWSE_ORDERS = "browse_orders",
   READ_ORDER = "read_order",
   ADD_ORDER = "add_order",
+
+  EDIT_ORDER = "edit_order",
+
+  ADD_PAYMENT = "add_payment",
 }
 
 enum PermissionAssignment {

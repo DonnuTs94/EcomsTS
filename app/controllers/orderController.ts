@@ -5,7 +5,9 @@ import {
   createOrder,
   findAllOrder,
   findAllOrdersUser,
+  findOrderId,
   findOrderUserById,
+  updateStatusPayment,
 } from "../services/orderService"
 import { createOrderItem } from "../services/orderItemService"
 import { getProductIds, updateManyQuantity } from "../services/productService"
@@ -98,11 +100,7 @@ const orderController = {
           Number(req.user?.id)
         )
 
-        paymentCheck(
-          createOrderData.date,
-          createOrderData.id,
-          createOrderData.status
-        )
+        paymentCheck(createOrderData.date, createOrderData.id)
 
         const orderItemData = cartData.map((item) => {
           return {
@@ -120,9 +118,9 @@ const orderController = {
 
         await createOrderItem(orderItemData)
 
-        // await updateManyQuantity(findProductIdInCart as [], newProductQty)
+        await updateManyQuantity(findProductIdInCart as [], newProductQty)
 
-        // await deleteManyCart(cartIds)
+        await deleteManyCart(cartIds)
 
         return res.status(200).json({
           message: "Success add new order",

@@ -158,4 +158,5 @@ enum StatusOrder {
   waitingForPayment @map("Waiting for Payment")
   paid              @map("Paid")
   canceled          @map("Canceled")
+  Success           @map("Success")
 }

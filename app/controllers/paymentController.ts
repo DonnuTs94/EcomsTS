@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { fetchResponse } from "../api/dummyPaymentGateway"
-import { findOrderId, updateStatusPayment } from "../services/orderService"
+import { updateStatusPayment } from "../services/orderService"
+import { updatePaymentToSuccess } from "../shcedule/paymentCheck"
 
 const paymentController = {
   createPayment: async (req: Request, res: Response) => {
@@ -15,21 +16,6 @@ const paymentController = {
         expiryMonth,
         expiryYear,
       }
-      const orderData = await findOrderId(orderId)
-
-      if (orderData?.total !== amount) {
-        return res.status(400).json({
-          message:
-            "Payment failed! The total amount provided does not match the order total.",
-        })
-      }
-
-      if (orderData?.status !== "waitingForPayment") {
-        return res.status(400).json({
-          message:
-            "You can only make a payment for orders with the status 'waiting for payment'.",
-        })
-      }
 
       const responsePayment = await fetchResponse(dataPayment)
       if (responsePayment.message === "Payment failed") {
@@ -38,7 +24,9 @@ const paymentController = {
         })
       }
 
-      await updateStatusPayment(orderId, "paid")
+      const orderData = await updateStatusPayment(orderId, "paid")
+
+      updatePaymentToSuccess(orderData.updatedAt, orderData.id)
 
       return res.status(200).json({
         message: "Payment Successful",
