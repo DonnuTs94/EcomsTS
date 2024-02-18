@@ -42,23 +42,18 @@ npm run dev
 
 ### Payment gateway setup
 
-1. **Create Repository:**
+**Clone Repository:**
 
-   - Go to [GitHub](https://github.com) and log in.
-   - Click on the "New" button to create a new repository.
-   - Enter the repository name, description, and other optional settings.
-   - Click on the "Create repository" button.
+- Copy the repository URL from the repository page.
+- Open your terminal or command prompt.
+- Navigate to the directory where you want to clone the repository.
+- Run the following command:
 
-2. **Clone Repository:**
-   - Copy the repository URL from the repository page.
-   - Open your terminal or command prompt.
-   - Navigate to the directory where you want to clone the repository.
-   - Run the following command:
-     ```
-     git clone <https://github.com/harrymahardhika/dummy-payment-gateway>
-     ```
-   - Replace `<https://github.com/harrymahardhika/dummy-payment-gateway>` with the URL you copied from the repository page.
-   - Press Enter to clone the repository to your local machine.
+  ```
+  git clone https://github.com/harrymahardhika/dummy-payment-gateway
+  ```
+
+- Press Enter to clone the repository to your local machine.
 
 ### Set Up the Project
 
@@ -79,13 +74,50 @@ npm run dev
      ```
    - This command will start the server, and it will be accessible at the specified port (default port is usually 3000).
 
-3. **Testing:**
-   - Once the server is running, you can test the endpoints using tools like Postman or by making HTTP requests directly.
-
 ### Additional Notes
 
 - Make sure to check the `README.md` file in the cloned repository for any specific instructions provided by the project's creator.
 - You may need to configure environment variables or make other adjustments according to your requirements.
+
+## Payment Scheduler Documentation
+
+### Overview
+
+The Payment Scheduler module provides functionality for managing order payments by scheduling tasks to check and update payment statuses. It employs the `node-schedule` library for task scheduling and integrates with Prisma ORM for database operations.
+
+### Functions
+
+#### Payment Check
+
+- **Description:** Schedules a task to check the payment status of an order and updates it if the payment is not received within one minute.
+- **Operation:**
+
+  - Checks the status of the order.
+  - If the status is "waitingForPayment" after one minute, updates the order status to "canceled" and returns the ordered product quantities to their original quantities.
+
+#### Update Payment To Success
+
+- **Description:** Schedules a task to update the payment status of an order to "Success" after 20 seconds.
+- **Parameters:**
+  - `date`: Date - The timestamp representing the scheduled update time.
+  - `orderId`: number - The unique identifier of the order to be updated.
+- **Operation:**
+
+  - Creates a job scheduled for 20 seconds from the provided `date`.
+  - Upon execution, updates the payment status of the order identified by `orderId` to "Success".
+
+## Postman Collection
+
+### Overview
+
+The Postman Collection file `Ecoms.postman_collection.json` contains a collection of API requests that correspond to the routes and endpoints defined in the application.
+
+### Usage
+
+1. Download the Postman Collection file `Ecoms.postman_collection.json`.
+2. Import the collection into your Postman application.
+3. Explore and execute the included requests to interact with the API endpoints.
+4. Use the collection as a reference for understanding and testing the functionality of the application's API.
 
 ### Admin Collection:
 
@@ -162,6 +194,14 @@ npm run dev
 - **Method:** POST
 - **Endpoint:** `/auth/`
 - **Description:** Authenticate user credentials.
+
+## User
+
+### User Update
+
+- **Method** Put
+- **Endpoint** `/user/update`
+- **Description** Update user data.
 
 ## Category
 

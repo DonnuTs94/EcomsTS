@@ -39,4 +39,22 @@ const findEmail = async (email: string) => {
   })
 }
 
-export { createUser, findRole, findEmail }
+const updateUserData = async (
+  userId: number,
+  firstName: string,
+  lastName: string,
+  address: string
+) => {
+  return await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      firstName,
+      lastName,
+      address,
+    },
+  })
+}
+
+export { createUser, findRole, findEmail, updateUserData }

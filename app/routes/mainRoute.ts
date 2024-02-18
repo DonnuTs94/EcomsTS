@@ -19,6 +19,8 @@ router.use("/product", productRoute)
 router.use("/cart", cartRoute)
 router.use("/order", orderRoute)
 
+// Uncomment the following code to enable listing of all routes in the application.
+
 // import expressListRoutes from "express-list-routes"
 // expressListRoutes(router)
 

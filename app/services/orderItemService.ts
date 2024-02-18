@@ -1,4 +1,4 @@
-import { PrismaClient, StatusOrder } from "@prisma/client"
+import { PrismaClient } from "@prisma/client"
 import { OrderItem } from "../interface/orderItemsInterface"
 
 const prisma = new PrismaClient()

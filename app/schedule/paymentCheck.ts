@@ -2,7 +2,7 @@ import schedule from "node-schedule"
 import { PrismaClient } from "@prisma/client"
 import { addSeconds, addMinutes } from "date-fns"
 import { findOrderItemFromOrderId } from "../services/orderItemService"
-import { updateStatusPayment } from "../services/orderService"
+import { findOrderId, updateStatusPayment } from "../services/orderService"
 
 const prisma = new PrismaClient()
 
@@ -10,23 +10,12 @@ const paymentCheck = (date: Date, orderId: number) => {
   const checkStatus = addMinutes(date, 1)
 
   schedule.scheduleJob(checkStatus, async () => {
-    const order = await prisma.order.findUnique({
-      where: {
-        id: orderId,
-      },
-    })
+    const order = await findOrderId(orderId)
 
     if (order?.status === "waitingForPayment") {
       console.log("Updating status to canceled for order:", orderId)
 
-      await prisma.order.update({
-        where: {
-          id: orderId,
-        },
-        data: {
-          status: "canceled",
-        },
-      })
+      await updateStatusPayment(orderId, "canceled")
 
       const getAllOrderItemInOrderId = await findOrderItemFromOrderId(
         Number(orderId)
