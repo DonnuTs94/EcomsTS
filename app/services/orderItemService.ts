@@ -9,23 +9,11 @@ const createOrderItem = async (orderItemData: OrderItem[]) => {
   })
 }
 
-const findOrderId = async (orderId: number) => {
-  return await prisma.order.findFirst({
+const findOrderItemFromOrderId = async (orderId: number) => {
+  return await prisma.orderItem.findMany({
     where: {
-      id: orderId,
+      orderId,
     },
   })
 }
-
-const updateStatusPayment = async (orderId: number, status: StatusOrder) => {
-  return await prisma.order.update({
-    where: {
-      id: orderId,
-    },
-    data: {
-      status: status,
-    },
-  })
-}
-
-export { createOrderItem, findOrderId, updateStatusPayment }
+export { createOrderItem, findOrderItemFromOrderId }

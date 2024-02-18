@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express"
-import { findOrderId } from "../services/orderItemService"
+import { findOrderId } from "../services/orderService"
 
 const findOrderOwner = async (
   req: Request,

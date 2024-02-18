@@ -118,10 +118,31 @@ const sellerAllOrders = async (adminId: number) => {
   return filterAdminOrders
 }
 
+const findOrderId = async (orderId: number) => {
+  return await prisma.order.findFirst({
+    where: {
+      id: orderId,
+    },
+  })
+}
+
+const updateStatusPayment = async (orderId: number, status: StatusOrder) => {
+  return await prisma.order.update({
+    where: {
+      id: orderId,
+    },
+    data: {
+      status: status,
+    },
+  })
+}
+
 export {
   createOrder,
   findAllOrder,
   findAllOrdersUser,
   findOrderUserById,
   sellerAllOrders,
+  findOrderId,
+  updateStatusPayment,
 }
