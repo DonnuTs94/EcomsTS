@@ -23,6 +23,7 @@ npm install
 ```
 
 Generate database after fill the .env
+
 ```bash
 npx prisma migrate dev
 ```
@@ -38,6 +39,89 @@ Start the development server
 ```bash
 npm run dev
 ```
+
+### Payment gateway setup
+
+1. **Create Repository:**
+
+   - Go to [GitHub](https://github.com) and log in.
+   - Click on the "New" button to create a new repository.
+   - Enter the repository name, description, and other optional settings.
+   - Click on the "Create repository" button.
+
+2. **Clone Repository:**
+   - Copy the repository URL from the repository page.
+   - Open your terminal or command prompt.
+   - Navigate to the directory where you want to clone the repository.
+   - Run the following command:
+     ```
+     git clone <https://github.com/harrymahardhika/dummy-payment-gateway>
+     ```
+   - Replace `<https://github.com/harrymahardhika/dummy-payment-gateway>` with the URL you copied from the repository page.
+   - Press Enter to clone the repository to your local machine.
+
+### Set Up the Project
+
+1. **Install Dependencies:**
+
+   - Navigate to the project directory in your terminal.
+   - Run the following command to install dependencies:
+     ```
+     npm install
+     ```
+   - This command will install all the required dependencies listed in the `package.json` file.
+
+2. **Start the Server:**
+
+   - After installing dependencies, you can start the server by running:
+     ```
+     npm start
+     ```
+   - This command will start the server, and it will be accessible at the specified port (default port is usually 3000).
+
+3. **Testing:**
+   - Once the server is running, you can test the endpoints using tools like Postman or by making HTTP requests directly.
+
+### Additional Notes
+
+- Make sure to check the `README.md` file in the cloned repository for any specific instructions provided by the project's creator.
+- You may need to configure environment variables or make other adjustments according to your requirements.
+
+### Admin Collection:
+
+- **Admin User:**
+  - **Email:** admin@example.com
+  - **Password:** Password123!
+
+### Seller Collection:
+
+- **Seller 1:**
+  - **Email:** seller1@example.com
+  - **Password:** Password123!
+- **Seller 2:**
+  - **Email:** seller2@example.com
+  - **Password:** Password123!
+- **Seller 3:**
+  - **Email:** seller3@example.com
+  - **Password:** Password123!
+
+### Seller Collection:
+
+- **User 1:**
+  - **Email:** user1@example.com
+  - **Password:** Password123!
+- **User 2:**
+  - **Email:** user2@example.com
+  - **Password:** Password123!
+- **User 3:**
+  - **Email:** user3@example.com
+  - **Password:** Password123!
+- **User 4:**
+  - **Email:** user4@example.com
+  - **Password:** Password123!
+- **User 5:**
+  - **Email:** user5@example.com
+  - **Password:** Password123!
 
 ## User Registration
 
@@ -183,6 +267,12 @@ npm run dev
 - **Endpoint:** `/order/`
 - **Description:** Create a new order.
 
+### Process Payment for an Order
+
+- **Method:** POST
+- **Endpoint:** `/order/:id/payment`
+- **Description:** Initiates the payment process for a particular order identified by its ID.
+
 ### Get All Orders
 
 - **Method:** GET
@@ -194,7 +284,3 @@ npm run dev
 - **Method:** GET
 - **Endpoint:** `/order/:id`
 - **Description:** Get an order by its ID.
-
-```
-
-```
